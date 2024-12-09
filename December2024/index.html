@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor de Video</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            width: 95%;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .video-container {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        video {
+            width: 100%;
+            max-width: 100%;
+            border-radius: 4px;
+        }
+        .file-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .loop-control {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Reproductor de Video</h1>
+        <div class="video-container">
+            <video id="videoPlayer" controls loop>
+                <source src="/api/placeholder/400/320" type="video/mp4">
+                Tu navegador no soporta el elemento de video.
+            </video>
+        </div>
+        <div class="controls">
+            <div class="loop-control">
+                <input type="checkbox" id="loopCheckbox" checked>
+                <label for="loopCheckbox">Reproducción en bucle</label>
+            </div>
+        </div>
+        <input type="file" id="videoInput" class="file-input" accept="video/*">
+    </div>
+
+    <script>
+        const videoPlayer = document.getElementById('videoPlayer');
+        const videoInput = document.getElementById('videoInput');
+        const loopCheckbox = document.getElementById('loopCheckbox');
+
+        // Manejar la carga de nuevos videos
+        videoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const videoUrl = URL.createObjectURL(file);
+                videoPlayer.src = videoUrl;
+                videoPlayer.load();
+            }
+        });
+
+        // Controlar la reproducción en bucle
+        loopCheckbox.addEventListener('change', function() {
+            videoPlayer.loop = this.checked;
+        });
+
+        // Asegurarse de que el video comience a reproducirse cuando esté listo
+        videoPlayer.addEventListener('loadeddata', function() {
+            videoPlayer.play().catch(function(error) {
+                console.log("La reproducción automática fue prevenida:", error);
+            });
+        });
+    </script>
+</body>
+</html>
